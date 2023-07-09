@@ -6,8 +6,8 @@ char* to_postfix() {
   stack_c stack;
   init_stack_c(&stack);
   int oper_i = 0, post_i = 0;
-  char oper_in_st;
-  char cur_oper;
+  char oper_in_st = 0;
+  char cur_oper = 0;
   int type;
   char oper[MAXOP];
 
@@ -35,7 +35,7 @@ char* to_postfix() {
       case '*':
       case '/':
         if (stack.sp != 0) {
-          while (operator_priority(oper_in_st) >= operator_priority(cur_oper) && stack.sp != 0) {
+          while (operator_priority(oper_in_st) != -1 && operator_priority(oper_in_st) >= operator_priority(cur_oper) && stack.sp != 0) {
             oper_in_st = pop_c(&stack);
             cur_oper = type;
             if (operator_priority(oper_in_st) >= operator_priority(cur_oper)) {  // If operator priority in stack is higher than current operator, we extract this operator from stack to postfix srting
@@ -81,9 +81,9 @@ int getop(char* s) {
       return s[0];    // 2. Any single char in lower case
   }
 
-  if (!isdigit(c) && c != '.' && c != '-')
+  if (!isdigit(c) && c != '.' && c != '~')
     return c;         // 3. Any single char that is not a letter
-  if (c == '-' || isdigit(c))  // collect integer part along with - 
+  if (c == '~' || isdigit(c))  // collect integer part along with - 
     while (isdigit(s[++i] = c = getchar()))
       ;
   if (c == '.')  // collect fraction part
@@ -102,6 +102,8 @@ int operator_priority(char c) {
   int res = -1;
   if (c == '(')
     res = 0;
+  else if (c == '~')
+    res = 3;
   else if (c == '+' || c == '-')
     res = 1;
   else if (c == '*' || c == '/')
@@ -115,6 +117,8 @@ int is_operator(char s[]) {
   int res = -1;
   if (strcmp(s, "(") == 0)
     res = 0;
+  else if (strcmp(s, "~") == 0)
+    res = 3;
   else if (strcmp(s, "+") == 0 || strcmp(s, "-") == 0)
     res = 1;
   else if (strcmp(s, "*") == 0 || strcmp(s, "/") == 0)
