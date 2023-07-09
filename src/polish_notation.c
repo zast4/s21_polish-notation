@@ -22,14 +22,12 @@ char* to_postfix() {
       case NAME:
         if (is_operator(oper) != -1) {
           if (strcmp(oper, "ctg") == 0)
-            push_c(&stack, 'g');
+            cur_oper = 'g';
           else if (strcmp(oper, "sqrt") == 0)
-            push_c(&stack, 'q');
-          else {
-            push_c(&stack, oper[0]);
-          }
+            cur_oper = 'q';
+          else 
+            cur_oper = oper[0];
         }
-        break;
       case '+':
       case '-':
       case '*':
@@ -37,7 +35,8 @@ char* to_postfix() {
         if (stack.sp != 0) {
           while (operator_priority(oper_in_st) != -1 && operator_priority(oper_in_st) >= operator_priority(cur_oper) && stack.sp != 0) {
             oper_in_st = pop_c(&stack);
-            cur_oper = type;
+            if (type != NAME)
+              cur_oper = type;
             if (operator_priority(oper_in_st) >= operator_priority(cur_oper)) {  // If operator priority in stack is higher than current operator, we extract this operator from stack to postfix srting
               postfix[post_i++] = oper_in_st;
               postfix[post_i++] = ' ';
@@ -48,7 +47,7 @@ char* to_postfix() {
           }
         }
         
-        push_c(&stack, type);
+        push_c(&stack, cur_oper);
         break;
     }
   }
