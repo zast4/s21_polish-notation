@@ -32,6 +32,8 @@ char* to_postfix() {
         break;
       case '+':
       case '-':
+      case '*':
+      case '/':
         if (stack.sp != 0) {
           while (operator_priority(oper_in_st) >= operator_priority(cur_oper) && stack.sp != 0) {
             oper_in_st = pop_c(&stack);
