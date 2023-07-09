@@ -1,7 +1,9 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef struct stack_c {
   int sp;
+  int stack_size;
   char* inner;
 } stack_c;
 
